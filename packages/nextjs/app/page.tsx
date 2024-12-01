@@ -1,16 +1,40 @@
 "use client";
 
 import { useState } from "react";
-import { Parser } from "json2csv";
 import type { NextPage } from "next";
 
 // Import json2csv to handle CSV generation
 
 const Home: NextPage = () => {
   const [address, setAddress] = useState<string>(""); // For storing entered wallet address
+  const [showAddress, setShowAddress] = useState<boolean>(false);
   const [transactions, setTransactions] = useState<any[]>([]); // To store fetched transactions
   const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
+  const [userOptions, setUserOptions] = useState<any[]>([
+    {
+      label: "Smart contract platform",
+      isSelected: false,
+    },
+    {
+      label: "Layer 1",
+      isSelected: false,
+    },
+    {
+      label: "Proof of Work (PoW)",
+      isSelected: false,
+    },
+    {
+      label: "Proof of Stake (PoW)",
+      isSelected: false,
+    },
+    {
+      label: "Multicoin Capital portfolio (PoW)",
+      isSelected: false,
+    },
+  ]);
+  console.log(error);
+  console.log(transactions);
 
   // Etherscan API key (replace with your own key)
   const etherscanApiKey = "YOUR_ETHERSCAN_API_KEY";
@@ -48,102 +72,115 @@ const Home: NextPage = () => {
     }
   };
 
+  const selectOption = (option: any) => {
+    const list = userOptions;
+    list.forEach(item => {
+      if (item.label === option.label) {
+        item.isSelected = !item.isSelected;
+      }
+    });
+    setUserOptions([...userOptions]);
+  };
+
+  const handleAddress = () => {
+    setShowAddress(!showAddress);
+  };
+
   // Helper function to validate Ethereum address format
   const isValidAddress = (addr: string) => {
     return /^0x[a-fA-F0-9]{40}$/.test(addr);
   };
 
   // Function to generate CSV from transactions
-  const generateCSV = () => {
-    if (transactions.length > 0) {
-      const parser = new Parser();
-      const csv = parser.parse(transactions); // Convert JSON to CSV
+  // const generateCSV = () => {
+  //   if (transactions.length > 0) {
+  //     const parser = new Parser();
+  //     const csv = parser.parse(transactions); // Convert JSON to CSV
 
-      // Create a blob with CSV data
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  //     // Create a blob with CSV data
+  //     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
 
-      // Create a link to download the CSV file
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `transactions_${address}.csv`;
-      link.click();
-    }
-  };
+  //     // Create a link to download the CSV file
+  //     const link = document.createElement("a");
+  //     link.href = URL.createObjectURL(blob);
+  //     link.download = `transactions_${address}.csv`;
+  //     link.click();
+  //   }
+  // };
 
   return (
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5">
-          <h1 className="text-center">
-            <span className="block text-4xl font-bold">Decaf</span>
+          <h1 className="text-left">
+            <span className="block text-4xl font-bold">Select Interests</span>
           </h1>
+          <div className="text-left">
+            <input
+              id="theme-toggle"
+              type="checkbox"
+              className="addressToggle toggle toggle-primary bg-primary hover:bg-primary border-primary"
+              onChange={handleAddress}
+              checked={showAddress}
+            />
+            <label className="addressToggleLabel" htmlFor="theme-toggle">
+              Allow the user to enter the Eth address
+            </label>
+          </div>
+          <br />
 
           {/* Search Bar */}
-          <div className="my-4 flex justify-center items-center">
-            <input
-              type="text"
-              className="input input-bordered w-full sm:w-96"
-              placeholder="Enter wallet address"
-              value={address}
-              onChange={e => setAddress(e.target.value)}
-            />
-            <button className="btn ml-4" onClick={handleSearch} disabled={isLoading}>
-              {isLoading ? "Loading..." : "Search"}
+          {showAddress && (
+            <div className="my-4 flex justify-left items-left">
+              <input
+                type="text"
+                className="input input-bordered w-full sm:w-96"
+                placeholder="Enter wallet address"
+                value={address}
+                onChange={e => setAddress(e.target.value)}
+              />
+              <button className="btn ml-4" onClick={handleSearch} disabled={isLoading}>
+                {isLoading ? "Loading..." : "Search"}
+              </button>
+            </div>
+          )}
+
+          {userOptions.map((option: any, index) => (
+            <button
+              key={1}
+              style={index === 0 ? { marginLeft: 0 } : {}}
+              className={`btn ml-4 optionButton ${option.isSelected ? "selected" : ""}`}
+              onClick={() => selectOption(option)}
+              disabled={isLoading}
+            >
+              #{option.label}
+            </button>
+          ))}
+          <br />
+
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1rem", marginBottom: "1rem" }}>
+            <button
+              style={{ width: "300px", background: "#4848d4", color: "#ffffff" }} // Increased width
+              className={`btn ${userOptions.filter(option => option.isSelected).length == 0 ? "hide" : ""}`}
+              onClick={handleSearch}
+              disabled={userOptions.filter(option => option.isSelected).length === 0}
+            >
+              {isLoading ? "Loading..." : "Show Analytics"}
             </button>
           </div>
 
-          {/* Display Transactions if there are any */}
+          {/* Button to generate CSV */}
           {address && (
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold text-center">Recent Transactions for {address}</h2>
-
-              {isLoading ? (
-                <p className="text-center">Loading transactions...</p>
-              ) : error ? (
-                <p className="text-red-500 text-center">{error}</p>
-              ) : transactions.length === 0 ? (
-                <p className="text-center">No transactions found for this address.</p>
-              ) : (
-                <div className="mt-4">
-                  {transactions.map((tx: any) => (
-                    <div key={tx.hash} className="border-b py-2">
-                      <p className="font-semibold">
-                        Tx Hash:
-                        <a
-                          href={`https://etherscan.io/tx/${tx.hash}`}
-                          target="_blank"
-                          className="text-blue-600"
-                          rel="noopener noreferrer"
-                        >
-                          {tx.hash}
-                        </a>
-                      </p>
-                      <p>Block: {tx.blockNumber}</p>
-                      <p>From: {tx.from}</p>
-                      <p>To: {tx.to}</p>
-                      <p>Value: {tx.value} Wei</p>
-                      <p>Date: {new Date(tx.timeStamp * 1000).toLocaleString()}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Button to generate CSV */}
-              <div className="text-center mt-4">
-                <button
-                  onClick={generateCSV}
-                  className="px-6 py-2 bg-blue-500 text-white rounded-md"
-                  disabled={transactions.length === 0}
-                >
-                  Download Transactions as CSV
-                </button>
-              </div>
+            <div className="text-center mt-4">
+              <button
+                onClick={() => {}}
+                className="px-6 py-2 bg-blue-500 text-white rounded-md"
+                disabled={userOptions.filter(option => option.isSelected).length == 0}
+              >
+                Download Transactions as CSV
+              </button>
             </div>
           )}
-        </div>
-
-        <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row"></div>
         </div>
       </div>
     </>

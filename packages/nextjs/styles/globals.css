@@ -30,3 +30,29 @@ p {
 .btn.btn-ghost {
   @apply shadow-none;
 }
+
+
+.selected {
+  background-color: #4ade80; /* Example green background */
+  color: white; /* Example white text */
+  border: none; /* Remove default border */
+}
+
+.selected:hover {
+  background-color: #4ade80; /* Example green background */
+  color: white; /* Example white text */
+  border: none; /* Remove default border */
+}
+
+.addressToggle {
+  margin-top: 20px;
+  margin-right: 10px;
+}
+
+.addressToggleLabel {
+  vertical-align: super;
+}
+
+.hide{
+  display: none;
+}
