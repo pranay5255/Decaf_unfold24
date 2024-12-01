@@ -1,85 +1,24 @@
 {
-    "categories": [
-      {
-        "name": "Smart Contract Platform",
-        "tokens": ["Ethereum (ETH)", "Solana (SOL)", "Cardano (ADA)"]
-      },
-      {
-        "name": "Layer 1 (L1)",
-        "tokens": ["Bitcoin (BTC)", "Ethereum (ETH)", "Binance Coin (BNB)"]
-      },
-      {
-        "name": "Proof of Work (PoW)",
-        "tokens": ["Bitcoin (BTC)", "Litecoin (LTC)", "Monero (XMR)"]
-      },
-      {
-        "name": "Proof of Stake (PoS)",
-        "tokens": ["Ethereum 2.0 (ETH2)", "Cardano (ADA)", "Polkadot (DOT)"]
-      },
-      {
-        "name": "Stablecoins",
-        "tokens": ["Tether (USDT)", "USD Coin (USDC)", "Binance USD (BUSD)"]
-      },
-      {
-        "name": "Meme",
-        "tokens": ["Dogecoin (DOGE)", "Shiba Inu (SHIB)", "Pepe (PEPE)"]
-      },
-      {
-        "name": "Decentralized Finance (DeFi)",
-        "tokens": ["Uniswap (UNI)", "Aave (AAVE)", "Compound (COMP)"]
-      },
-      {
-        "name": "Decentralized Exchange (DEX)",
-        "tokens": ["Uniswap (UNI)", "SushiSwap (SUSHI)", "PancakeSwap (CAKE)"]
-      },
-      {
-        "name": "Artificial Intelligence (AI)",
-        "tokens": ["Fetch.ai (FET)", "SingularityNET (AGIX)", "Ocean Protocol (OCEAN)"]
-      },
-      {
-        "name": "Gaming",
-        "tokens": ["Axie Infinity (AXS)", "Decentraland (MANA)", "The Sandbox (SAND)"]
-      },
-      {
-        "name": "Infrastructure",
-        "tokens": ["Chainlink (LINK)", "The Graph (GRT)", "Alchemy Pay (ACH)"]
-      },
-      {
-        "name": "Exchange-based Tokens",
-        "tokens": ["Binance Coin (BNB)", "FTX Token (FTT)", "KuCoin Token (KCS)"]
-      },
-      {
-        "name": "Privacy Coins",
-        "tokens": ["Monero (XMR)", "Zcash (ZEC)", "Dash (DASH)"]
-      },
-      {
-        "name": "Yield Farming",
-        "tokens": ["Yearn.Finance (YFI)", "Curve DAO Token (CRV)", "SushiSwap (SUSHI)"]
-      },
-      {
-        "name": "Non-Fungible Tokens (NFTs)",
-        "tokens": ["Enjin Coin (ENJ)", "Chiliz (CHZ)", "Flow (FLOW)"]
-      },
-      {
-        "name": "Oracle",
-        "tokens": ["Chainlink (LINK)", "Band Protocol (BAND)", "API3 (API3)"]
-      },
-      {
-        "name": "Launchpad",
-        "tokens": ["TrustSwap (SWAP)", "Polkastarter (POLS)", "DAO Maker (DAO)"]
-      },
-      {
-        "name": "Metaverse",
-        "tokens": ["Decentraland (MANA)", "The Sandbox (SAND)", "Somnium Space (CUBE)"]
-      },
-      {
-        "name": "Lending/Borrowing",
-        "tokens": ["Aave (AAVE)", "Compound (COMP)", "Maker (MKR)"]
-      },
-      {
-        "name": "Insurance",
-        "tokens": ["Nexus Mutual (NXM)", "InsurAce (INSUR)", "Cover Protocol (COVER)"]
-      }
-    ]
+    "reverse_mapping": {
+      "Ethereum (ETH)": ["Smart Contract Platform", "Layer1", "PoS"],
+      "Solana (SOL)": ["Smart Contract Platform", "Layer1"],
+      "Cardano (ADA)": ["Smart Contract Platform", "PoS"],
+      "Avalanche (AVAX)": ["Smart Contract Platform", "PoS"],
+      "Tezos (XTZ)": ["Smart Contract Platform"],
+      "Bitcoin (BTC)": ["Layer1", "PoW"],
+      "Binance Coin (BNB)": ["Layer1"],
+      "Polkadot (DOT)": ["Layer1", "PoS"],
+      "Litecoin (LTC)": ["PoW"],
+      "Monero (XMR)": ["PoW"],
+      "Ethereum Classic (ETC)": ["PoW"],
+      "Zcash (ZEC)": ["PoW"],
+      "Ethereum 2.0 (ETH2)": ["PoS"],
+      "Algorand (ALGO)": ["PoS"],
+      "Tether (USDT)": ["Stablecoins"],
+      "USD Coin (USDC)": ["Stablecoins"],
+      "Binance USD (BUSD)": ["Stablecoins"],
+      "Dai (DAI)": ["Stablecoins"],
+      "Pax Dollar (USDP)": ["Stablecoins"]
+    }
   }
   
