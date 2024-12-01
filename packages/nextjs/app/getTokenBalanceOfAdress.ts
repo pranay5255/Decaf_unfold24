@@ -8,8 +8,8 @@ export const getTokenBalanceOfAdress = async (
     return;
   }
 
-  const moralisApiKey =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjgyMzFlZWI4LWQ4YjctNDY5Ni1hOGQ3LTgwZjhmZDA5NDQwZiIsIm9yZ0lkIjoiNDE3MjkzIiwidXNlcklkIjoiNDI5MDI1IiwidHlwZUlkIjoiNzkzNmUwN2EtZTgzNi00NTVlLWE4ZmMtMzYxMjgyMTFmNWE1IiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3MzIyODM0MTQsImV4cCI6NDg4ODA0MzQxNH0.9wvyoJ-gHt2nN_GoWAPqsol0Kt42Sl_C76_SMWsHlvA";
+  const NEXT_PUBLIC_MORALIS_API_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjgyMzFlZWI4LWQ4YjctNDY5Ni1hOGQ3LTgwZjhmZDA5NDQwZiIsIm9yZ0lkIjoiNDE3MjkzIiwidXNlcklkIjoiNDI5MDI1IiwidHlwZUlkIjoiNzkzNmUwN2EtZTgzNi00NTVlLWE4ZmMtMzYxMjgyMTFmNWE1IiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3MzIyODM0MTQsImV4cCI6NDg4ODA0MzQxNH0.9wvyoJ-gHt2nN_GoWAPqsol0Kt42Sl_C76_SMWsHlvA"
+  const moralisApiKey = NEXT_PUBLIC_MORALIS_API_KEY || process.env.NEXT_PUBLIC_MORALIS_API_KEY;
 
   try {
     const response = await fetch(`https://deep-index.moralis.io/api/v2/${ethWalletAddress}/erc20`, {

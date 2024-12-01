@@ -1,9 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
+import { getTokenBalanceOfAdress } from "./getTokenBalanceOfAdress";
+
+
+
+
+
+//impose base.json file
+
+
+
 
 // Import json2csv to handle CSV generation
 
@@ -17,26 +27,50 @@ const Home: NextPage = () => {
   const [error, setError] = useState<string | null>(null); // Error state
   const [userOptions, setUserOptions] = useState<any[]>([
     {
-      label: "Smart contract platform",
+      label: "Smart Contract Platform",
       isSelected: false,
     },
     {
-      label: "Layer 1",
+      label: "Layer1",
       isSelected: false,
     },
     {
-      label: "Proof of Work (PoW)",
+      label: "PoW",
       isSelected: false,
     },
     {
-      label: "Proof of Stake (PoW)",
+      label: "PoS",
       isSelected: false,
     },
     {
-      label: "Multicoin Capital portfolio (PoW)",
+      label: "Stablecoins",
       isSelected: false,
     },
   ]);
+
+  const tokenMetadata = {
+    "Ryoshi": ["Smart Contract Platform", "Layer1", "PoS"],
+    "Pepe 2.0": ["Smart Contract Platform", "Layer1"],
+    "Cardano (ADA)": ["Smart Contract Platform", "PoS"],
+    "Avalanche (AVAX)": ["Smart Contract Platform", "PoS"],
+    "Tezos (XTZ)": ["Smart Contract Platform"],
+    "Bitcoin (BTC)": ["Layer1", "PoW"],
+    "Binance Coin (BNB)": ["Layer1"],
+    "Polkadot (DOT)": ["Layer1", "PoS"],
+    "Litecoin (LTC)": ["PoW"],
+    "Monero (XMR)": ["PoW"],
+    "Ethereum Classic (ETC)": ["PoW"],
+    "Zcash (ZEC)": ["PoW"],
+    "Ethereum 2.0 (ETH2)": ["PoS"],
+    "Algorand (ALGO)": ["PoS"],
+    "Tether (USDT)": ["Stablecoins"],
+    "USD Coin (USDC)": ["Stablecoins"],
+    "Binance USD (BUSD)": ["Stablecoins"],
+    "Dai (DAI)": ["Stablecoins"],
+    "Pax Dollar (USDP)": ["Stablecoins"],
+  };
+
+
   console.log(error);
   console.log(transactions);
   console.log(address, isConnected);
@@ -46,7 +80,7 @@ const Home: NextPage = () => {
   const etherscanUrl = "https://api.etherscan.io/api";
 
   // Function to handle search and fetch transactions for entered address
-  const handleSearch = async () => {
+  const handleSearch = async (address:any) => {
     if (!useraddress || !isValidAddress(useraddress)) {
       setError("Please enter a valid Ethereum address.");
       return; // Don't search if the address is empty or invalid
@@ -54,54 +88,60 @@ const Home: NextPage = () => {
 
     setIsLoading(true);
     setError(null);
-    setTransactions([]);
 
     try {
-      const response = await fetch(
-        `${etherscanUrl}?module=account&action=txlist&address=${useraddress}&startblock=0&endblock=99999999&sort=desc&apikey=${etherscanApiKey}`,
-      );
-      const data = await response.json();
-
-      console.log("Etherscan API Response:", data); // Debugging: Check the API response
-
-      if (data.status === "1") {
-        setTransactions(data.result); // Set the transaction data
-      } else {
-        setError(data.message || "No transactions found or an error occurred.");
-      }
+      const data = await getTokenBalanceOfAdress(address, console.error, addr => /^0x[a-fA-F0-9]{40}$/.test(addr));
+      getLabels(data)
+      
     } catch (err) {
-      console.error("Error fetching transactions:", err); // Debugging: Log any errors
+      console.error("Error fetching transactions:", err);
       setError("Error fetching transactions.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadTransactions = async () => {
+
+  //In your Home component:
+  useEffect(() => {
+    const loadTransactions = async () => { // Define the function inside the effect
     try {
-      const response = await fetch(
-        `${etherscanUrl}?module=account&action=addresstokenbalance&address=0x983e3660c0bE01991785F80f266A84B911ab59b0&page=1&offset=100&apikey=${etherscanApiKey}`,
-      );
-      // `${etherscanUrl}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${etherscanApiKey}`,
-
-      const data = await response.json();
-
-      console.log("Etherscan API Response:", data); // Debugging: Check the API response
-
-      if (data.status === "1") {
-        setTransactions(data.result); // Set the transaction data
-      } else {
-        setError(data.message || "No transactions found or an error occurred.");
-      }
+      const data = await getTokenBalanceOfAdress(address, console.error, addr => /^0x[a-fA-F0-9]{40}$/.test(addr));
+      getLabels(data)
+      
     } catch (err) {
-      console.error("Error fetching transactions:", err); // Debugging: Log any errors
+      console.error("Error fetching transactions:", err);
       setError("Error fetching transactions.");
     } finally {
       setIsLoading(false);
     }
   };
+    loadTransactions(); // Call the function inside useEffect
 
-  loadTransactions();
+  }, [address]);
+
+  const getLabels =(tokens:any)=>{
+    tokens = Object.values(tokens);
+    console.log(Object.values(tokens)) //get unique value values
+    const metadata_list = Object.keys(tokenMetadata);
+    const list = userOptions;
+    let filteredList:any[] = [];
+    metadata_list.forEach((token:any) => {
+      if (tokens[0].indexOf(token)!=-1) {
+        filteredList = filteredList.concat(tokenMetadata[token]);
+      }
+    });
+    list.forEach(item => {
+      if (filteredList.indexOf(item.label)!=-1) {
+        item.isSelected = true;
+      }else{
+        item.isSelected = false;
+      }
+    });
+    setUserOptions(list);
+  }
+
+  
 
   const selectOption = (option: any) => {
     const list = userOptions;
@@ -126,23 +166,6 @@ const Home: NextPage = () => {
     //navigate to the debug path
     router.push("/analytics");
   }
-
-  // Function to generate CSV from transactions
-  // const generateCSV = () => {
-  //   if (transactions.length > 0) {
-  //     const parser = new Parser();
-  //     const csv = parser.parse(transactions); // Convert JSON to CSV
-
-  //     // Create a blob with CSV data
-  //     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-
-  //     // Create a link to download the CSV file
-  //     const link = document.createElement("a");
-  //     link.href = URL.createObjectURL(blob);
-  //     link.download = `transactions_${address}.csv`;
-  //     link.click();
-  //   }
-  // };
 
   return (
     <>
@@ -175,7 +198,7 @@ const Home: NextPage = () => {
                 value={useraddress}
                 onChange={e => setAddress(e.target.value)}
               />
-              <button className="btn ml-4" onClick={handleSearch} disabled={isLoading}>
+              <button className="btn ml-4" onClick={()=>handleSearch(useraddress)} disabled={isLoading}>
                 {isLoading ? "Loading..." : "Search"}
               </button>
             </div>
@@ -204,19 +227,6 @@ const Home: NextPage = () => {
               {isLoading ? "Loading..." : "Show Analytics"}
             </button>
           </div>
-
-          {/* Button to generate CSV */}
-          {useraddress && (
-            <div className="text-center mt-4">
-              <button
-                onClick={() => {}}
-                className="px-6 py-2 bg-blue-500 text-white rounded-md"
-                disabled={userOptions.filter(option => option.isSelected).length == 0}
-              >
-                Download Transactions as CSV
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </>
