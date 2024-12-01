@@ -1,12 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { NextPage } from "next";
+import { useAccount } from "wagmi";
 
 // Import json2csv to handle CSV generation
 
 const Home: NextPage = () => {
-  const [address, setAddress] = useState<string>(""); // For storing entered wallet address
+  const { address, isConnected } = useAccount();
+  const router = useRouter();
+  const [useraddress, setAddress] = useState<string>(""); // For storing entered wallet address
   const [showAddress, setShowAddress] = useState<boolean>(false);
   const [transactions, setTransactions] = useState<any[]>([]); // To store fetched transactions
   const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state
@@ -35,14 +39,15 @@ const Home: NextPage = () => {
   ]);
   console.log(error);
   console.log(transactions);
+  console.log(address, isConnected);
 
   // Etherscan API key (replace with your own key)
-  const etherscanApiKey = "YOUR_ETHERSCAN_API_KEY";
+  const etherscanApiKey = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY;
   const etherscanUrl = "https://api.etherscan.io/api";
 
   // Function to handle search and fetch transactions for entered address
   const handleSearch = async () => {
-    if (!address || !isValidAddress(address)) {
+    if (!useraddress || !isValidAddress(useraddress)) {
       setError("Please enter a valid Ethereum address.");
       return; // Don't search if the address is empty or invalid
     }
@@ -53,7 +58,7 @@ const Home: NextPage = () => {
 
     try {
       const response = await fetch(
-        `${etherscanUrl}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${etherscanApiKey}`,
+        `${etherscanUrl}?module=account&action=txlist&address=${useraddress}&startblock=0&endblock=99999999&sort=desc&apikey=${etherscanApiKey}`,
       );
       const data = await response.json();
 
@@ -71,6 +76,32 @@ const Home: NextPage = () => {
       setIsLoading(false);
     }
   };
+
+  const loadTransactions = async () => {
+    try {
+      const response = await fetch(
+        `${etherscanUrl}?module=account&action=addresstokenbalance&address=0x983e3660c0bE01991785F80f266A84B911ab59b0&page=1&offset=100&apikey=${etherscanApiKey}`,
+      );
+      // `${etherscanUrl}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${etherscanApiKey}`,
+
+      const data = await response.json();
+
+      console.log("Etherscan API Response:", data); // Debugging: Check the API response
+
+      if (data.status === "1") {
+        setTransactions(data.result); // Set the transaction data
+      } else {
+        setError(data.message || "No transactions found or an error occurred.");
+      }
+    } catch (err) {
+      console.error("Error fetching transactions:", err); // Debugging: Log any errors
+      setError("Error fetching transactions.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadTransactions();
 
   const selectOption = (option: any) => {
     const list = userOptions;
@@ -90,6 +121,11 @@ const Home: NextPage = () => {
   const isValidAddress = (addr: string) => {
     return /^0x[a-fA-F0-9]{40}$/.test(addr);
   };
+
+  function goToAnalytics(): void {
+    //navigate to the debug path
+    router.push("/analytics");
+  }
 
   // Function to generate CSV from transactions
   // const generateCSV = () => {
@@ -136,7 +172,7 @@ const Home: NextPage = () => {
                 type="text"
                 className="input input-bordered w-full sm:w-96"
                 placeholder="Enter wallet address"
-                value={address}
+                value={useraddress}
                 onChange={e => setAddress(e.target.value)}
               />
               <button className="btn ml-4" onClick={handleSearch} disabled={isLoading}>
@@ -162,7 +198,7 @@ const Home: NextPage = () => {
             <button
               style={{ width: "300px", background: "#4848d4", color: "#ffffff" }} // Increased width
               className={`btn ${userOptions.filter(option => option.isSelected).length == 0 ? "hide" : ""}`}
-              onClick={handleSearch}
+              onClick={goToAnalytics}
               disabled={userOptions.filter(option => option.isSelected).length === 0}
             >
               {isLoading ? "Loading..." : "Show Analytics"}
@@ -170,7 +206,7 @@ const Home: NextPage = () => {
           </div>
 
           {/* Button to generate CSV */}
-          {address && (
+          {useraddress && (
             <div className="text-center mt-4">
               <button
                 onClick={() => {}}
