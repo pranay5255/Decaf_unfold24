@@ -28,7 +28,7 @@ export const Footer = () => {
               </p>
               <a
                 className="flex justify-center items-center gap-1"
-                href="https://buidlguidl.com/"
+                href="https://github.com/pranay5255/Decaf_unfold24"
                 target="_blank"
                 rel="noreferrer"
               >
