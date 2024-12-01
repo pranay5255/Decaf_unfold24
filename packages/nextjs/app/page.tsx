@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import type { NextPage } from "next";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { Parser } from "json2csv"; // Import json2csv to handle CSV generation
+import { Parser } from "json2csv";
+import type { NextPage } from "next";
+
+// Import json2csv to handle CSV generation
 
 const Home: NextPage = () => {
   const [address, setAddress] = useState<string>(""); // For storing entered wallet address
@@ -29,7 +29,7 @@ const Home: NextPage = () => {
 
     try {
       const response = await fetch(
-        `${etherscanUrl}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${etherscanApiKey}`
+        `${etherscanUrl}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${etherscanApiKey}`,
       );
       const data = await response.json();
 
@@ -77,7 +77,7 @@ const Home: NextPage = () => {
           <h1 className="text-center">
             <span className="block text-4xl font-bold">Decaf</span>
           </h1>
-          
+
           {/* Search Bar */}
           <div className="my-4 flex justify-center items-center">
             <input
@@ -85,13 +85,9 @@ const Home: NextPage = () => {
               className="input input-bordered w-full sm:w-96"
               placeholder="Enter wallet address"
               value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={e => setAddress(e.target.value)}
             />
-            <button
-              className="btn ml-4"
-              onClick={handleSearch}
-              disabled={isLoading}
-            >
+            <button className="btn ml-4" onClick={handleSearch} disabled={isLoading}>
               {isLoading ? "Loading..." : "Search"}
             </button>
           </div>
@@ -111,7 +107,8 @@ const Home: NextPage = () => {
                 <div className="mt-4">
                   {transactions.map((tx: any) => (
                     <div key={tx.hash} className="border-b py-2">
-                      <p className="font-semibold">Tx Hash: 
+                      <p className="font-semibold">
+                        Tx Hash:
                         <a
                           href={`https://etherscan.io/tx/${tx.hash}`}
                           target="_blank"
@@ -146,28 +143,7 @@ const Home: NextPage = () => {
         </div>
 
         <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-          </div>
+          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row"></div>
         </div>
       </div>
     </>
