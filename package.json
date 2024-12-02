@@ -48,6 +48,7 @@
     "@types/json2csv": "^5.0.7",
     "chart.js": "^4.4.6",
     "json2csv": "^6.0.0-alpha.2",
-    "react-chartjs-2": "^5.2.0"
+    "react-chartjs-2": "^5.2.0",
+    "yarn": "^1.22.22"
   }
 }

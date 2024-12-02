@@ -22,7 +22,7 @@ ChartJS.register(
 const Debug: NextPage = () => {
   const { address, isConnected } = useAccount();
   const donught_data = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    labels: ['Eth', 'ARB', 'SHIB', 'OP', 'USDC', 'USDT'],
     datasets: [
       {
         label: '# of Votes',
@@ -69,12 +69,12 @@ const Debug: NextPage = () => {
     labels,
     datasets: [
       {
-        label: 'Dataset 1',
+        label: 'Market',
         data: labels.map(() => Math.floor(Math.random() * 1000)),
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
       {
-        label: 'Dataset 2',
+        label: 'Your Portfolio',
         data: labels.map(() => Math.floor(Math.random() * 1000)),
         backgroundColor: 'rgba(54, 162, 235, 0.5)',
       },
@@ -86,13 +86,13 @@ const Debug: NextPage = () => {
     labels,
     datasets: [
       {
-        label: 'Dataset 1',
+        label: 'Market Tends',
         data: labels.map(() => Math.floor(Math.random() * 1000)),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
       {
-        label: 'Dataset 2',
+        label: 'Portfolio Tends',
         data: labels.map(() => Math.floor(Math.random() * 1000)),
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
@@ -103,7 +103,7 @@ const Debug: NextPage = () => {
   //pie data
 
   const pie_data = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    labels: ['Eth', 'ARB', 'SHIB', 'OP', 'USDC', 'USDT'],
     datasets: [
       {
         label: '# of Votes',
