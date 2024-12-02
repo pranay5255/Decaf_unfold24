@@ -3,6 +3,13 @@
 **Unlock actionable insights, track friends’ portfolios, and monitor market movers—all from your wallet.**  
 
 ---
+## Smart Contract 
+
+Contract address for LikeContract on base sepolia
+0xac487e55fC60BB64B4af33F8aC5c34312bdFE54b
+
+
+---
 
 ## 📝 **Overview**  
 
