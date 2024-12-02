@@ -25,6 +25,9 @@ In the fast-paced world of crypto, investors often face information overload and
    - **Hype Detector:** Identify market hype before it goes mainstream, enabling early investments and informed decisions.  
 
 ---
+![Analytics](public/analytics.png)
+
+![Leaderboard](public/leaderboard.png)
 
 ## 💡 **Why [Decaf]?**  
 - **AI-Powered Decision Making:** Get actionable insights, not just raw data.  
